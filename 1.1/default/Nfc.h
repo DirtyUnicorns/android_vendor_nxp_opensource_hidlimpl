@@ -95,13 +95,13 @@ struct Nfc : public V1_1::INfc, public hidl_death_recipient {
       auto ret = mCallbackV1_1->sendEvent_1_1((V1_1::NfcEvent)event,
                                               (V1_0::NfcStatus)status);
       if (!ret.isOk()) {
-        ALOGW("failed to send event for mCallbackV1_1!!!");
+        ALOGW("failed to send event!!!");
       }
     } else if (mCallbackV1_0 != nullptr) {
       auto ret = mCallbackV1_0->sendEvent((V1_0::NfcEvent)event,
                                           (V1_0::NfcStatus)status);
       if (!ret.isOk()) {
-        ALOGE("failed to send event for mCallbackV1_0!!!");
+        ALOGE("failed to send event!!!");
       }
     }
   }
@@ -112,12 +112,12 @@ struct Nfc : public V1_1::INfc, public hidl_death_recipient {
     if (mCallbackV1_1 != nullptr) {
       auto ret = mCallbackV1_1->sendData(data);
       if (!ret.isOk()) {
-        ALOGW("failed to send data for mCallbackV1_1!!!");
+        ALOGW("failed to send data!!!");
       }
     } else if (mCallbackV1_0 != nullptr) {
       auto ret = mCallbackV1_0->sendData(data);
       if (!ret.isOk()) {
-        ALOGE("failed to send data for mCallbackV1_0!!!");
+        ALOGE("failed to send data!!!");
       }
     }
   }

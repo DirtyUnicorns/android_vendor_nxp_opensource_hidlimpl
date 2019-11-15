@@ -31,7 +31,6 @@
 #include <log/log.h>
 #include "NqNfc.h"
 #include "phNxpNciHal_Adaptation.h"
-#include "NfcApiGet.h"
 
 namespace vendor {
 namespace nxp {
@@ -53,17 +52,8 @@ Return<void> NqNfc::ioctl(uint64_t ioctlType, const hidl_vec<uint8_t>& inputData
      * underlying HAL implementation since its an inout argument
      */
     memcpy(&inpOutData, pInOutData, sizeof(nfc_nci_IoctlInOutData_t));
-    hal_api_struct_t *hal_api_s = getHalApiStruct();
-    if (hal_api_s == nullptr){
-        /*
-         * In the case of a failure, phNxpNciHal_ioctl typically returns -1.
-         * Because we need to call _hidl_cb(outputData) anyway, we can set that here.
-         */
-        status = STATUS_FAILURE;
-    }
-    else {
-        status = hal_api_s->phNxpNciHal_ioctl(ioctlType, &inpOutData);
-    }
+    status = phNxpNciHal_ioctl(ioctlType, &inpOutData);
+
     /*
      * copy data and additional fields indicating status of ioctl operation
      * and context of the caller. Then invoke the corresponding proxy callback
@@ -78,38 +68,17 @@ Return<void> NqNfc::ioctl(uint64_t ioctlType, const hidl_vec<uint8_t>& inputData
 
 // Methods from ::vendor::nxp::hardware::nfc::V1_1::INqNfc follow.
 Return<void> NqNfc::getNfcChipId(getNfcChipId_cb _hidl_cb) {
-    std::string value;
-    hal_api_struct_t *hal_api_s = getHalApiStruct();
-    if (hal_api_s == nullptr){
-        /*
-         * In the case of a failure, phNxpNciHal_getNfcChipId returns NULL.
-         * Because we need to call _hidl_cb(value) anyway, we can set that here.
-         */
-        value = "";
-    }
-    else {
-        value = hal_api_s->phNxpNciHal_getNfcChipId();
-    }
+    std::string value = phNxpNciHal_getNfcChipId();
     _hidl_cb(value);
     return Void();
 }
 
 Return<void> NqNfc::getNfcFirmwareVersion(getNfcFirmwareVersion_cb _hidl_cb) {
-    std::string value;
-    hal_api_struct_t *hal_api_s = getHalApiStruct();
-    if (hal_api_s == nullptr){
-        /*
-         * In the case of a failure, phNxpNciHal_getNfcFirmwareVersion returns NULL.
-         * Because we need to call _hidl_cb(value) anyway, we can set that here.
-         */
-        value = "";
-    }
-    else {
-        value = hal_api_s->phNxpNciHal_getNfcFirmwareVersion();
-    }
+    std::string value = phNxpNciHal_getNfcFirmwareVersion();
     _hidl_cb(value);
     return Void();
 }
+
 
 }  // namespace implementation
 }  // namespace V1_1

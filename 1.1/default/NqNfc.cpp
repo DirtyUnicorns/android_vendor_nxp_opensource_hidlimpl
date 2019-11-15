@@ -31,7 +31,6 @@
 #include <log/log.h>
 #include "NqNfc.h"
 #include "phNxpNciHal_Adaptation.h"
-#include "NfcApiGet.h"
 
 namespace vendor {
 namespace nxp {
@@ -53,17 +52,8 @@ Return<void> NqNfc::ioctl(uint64_t ioctlType, const hidl_vec<uint8_t>& inputData
      * underlying HAL implementation since its an inout argument
      */
     memcpy(&inpOutData, pInOutData, sizeof(nfc_nci_IoctlInOutData_t));
-    hal_api_struct_t *hal_api_s = getHalApiStruct();
-    if (hal_api_s == nullptr){
-        /*
-         * In the case of a failure, phNxpNciHal_ioctl typically returns -1.
-         * Because we need to call _hidl_cb(outputData) anyway, we can set that here.
-         */
-        status = STATUS_FAILURE;
-    }
-    else {
-        status = hal_api_s->phNxpNciHal_ioctl(ioctlType, &inpOutData);
-    }
+    status = phNxpNciHal_ioctl(ioctlType, &inpOutData);
+
     /*
      * copy data and additional fields indicating status of ioctl operation
      * and context of the caller. Then invoke the corresponding proxy callback

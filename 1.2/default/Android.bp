@@ -5,12 +5,12 @@ cc_binary {
     relative_install_path: "hw",
     vendor: true,
     srcs: [
-        "NfcApiGet.cpp",
         "service.cpp",
         "Nfc.cpp",
         "NqNfc.cpp",
     ],
     shared_libs: [
+        "nfc_nci.nqx.default.hw",
         "libhidlbase",
         "libhidltransport",
         "libutils",
@@ -23,6 +23,5 @@ cc_binary {
     ],
     header_libs: [
         "libhardware_headers",
-        "libnqnfc_hal_headers",
     ],
 }
